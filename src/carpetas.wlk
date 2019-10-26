@@ -10,11 +10,12 @@ class Carpeta{
 	method borrarArchivo(nombreDelArchivo){
 		archivos.remove(self.obtenerArchivo(nombreDelArchivo))
 	}
+	method vacia() = archivos.isEmpty() 
 }
 
 class Archivo{
 	var property nombre	
-	var contenido	
+	var property contenido	
 	
 	method agregarContenido(texto){
 		contenido = contenido + texto
