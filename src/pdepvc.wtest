@@ -1,0 +1,35 @@
+import carpetas.*
+import commits.*
+
+describe "Carpetas y archivos"{
+	const file1 = new Archivo (nombre = "file1" , contenido ="djksabjkdabf")
+	const file2 = new Archivo (nombre = "file2" , contenido ="djkfsxvsabjkdabf")
+	const file3 = new Archivo (nombre = "file3" , contenido ="djksabjxbxkbaafhjbvxkdabf") 
+	
+	const files = new Carpeta (nombre = "files")
+	
+	test "Hay una archivo llamado file3 en la carpeta files " {
+		files.agregarArchivo(file1)
+		files.agregarArchivo(file3)
+		files.agregarArchivo(file2)
+		assert.that(files.contieneA("file3"))
+	}
+}
+describe "Commits"{
+	const pdep = new Carpeta(nombre="pdep")
+	const parcial = new Archivo(nombre = "parcial.wlk",contenido="")
+	const carpeta1 = new Carpeta(nombre="carpeta",archivos=[parcial])	
+	const agregarReadme = new CrearArchivo(archivo = "leeme.md")
+	const agregarParcial = new CrearArchivo(archivo = "parcial.wlk")
+	const agregarTexto = new CambioAgregar(archivo="parcial.wlk",texto="Este es un parcial")
+	const inicial = new Commit(descripcion="Commit inicial", cambios=[agregarReadme,agregarParcial,agregarTexto])
+		
+	test "aplicar commit a carpeta pdep"{
+		inicial.aplicarCommit(pdep)
+		assert.that(pdep.contieneA("parcial.wlk"))	
+		assert.that(pdep.contieneA("leeme.md"))	
+	}
+	test "aplicar commit a carpeta1, no deberia funcionar"{
+		assert.throwsException({=> inicial.aplicarCommit(carpeta1)})
+	}
+}
