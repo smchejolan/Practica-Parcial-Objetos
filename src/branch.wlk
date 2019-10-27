@@ -2,14 +2,18 @@ import carpetas.*
 import commits.*
 
 class Branch{
-	const carpeta
+	const property colaboradores = []
 	const property commits = []
 
-	method hacerCheckout(){
+	method hacerCheckout(carpeta){
 		commits.forEach({commit=>commit.aplicarCommit(carpeta)})
 	}
 	method agregarCommit(commit){
 		commits.add(commit)
+	}
+	method blame(archivoAnalizado){
+		var log = new Log(archivo = archivoAnalizado)
+		return log.obtenerCommits(self).map({commit=>commit.autor()})
 	}
 }
 

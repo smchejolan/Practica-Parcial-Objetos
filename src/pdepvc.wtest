@@ -23,8 +23,8 @@ describe "Commits y revert"{
 	const agregarReadme = new CrearArchivo(archivo = "leeme.md")
 	const agregarParcial = new CrearArchivo(archivo = "parcial.wlk")
 	const agregarTexto = new CambioAgregar(archivo="parcial.wlk",texto="Este es un parcial")
-	const inicial = new Commit(descripcion="Commit inicial", cambios=[agregarReadme,agregarParcial,agregarTexto])
-	const revertInicial = inicial.revert()
+	const inicial = new Commit(autor = null,descripcion="Commit inicial", cambios=[agregarReadme,agregarParcial,agregarTexto])
+	const revertInicial = inicial.revert(null)
 		
 	test "aplicar commit a carpeta pdep"{
 		inicial.aplicarCommit(pdep)
@@ -38,6 +38,7 @@ describe "Commits y revert"{
 	test "carpeta vacia luego de revertir commit inicial"{
 		inicial.aplicarCommit(pdep)
 		revertInicial.aplicarCommit(pdep)
+		assert.equals("Revert Commit inicial",revertInicial.descripcion())
 		assert.that(pdep.vacia())
 	}
 }
@@ -48,15 +49,15 @@ describe "Branchs y log"{
 	const agregarParcial = new CrearArchivo(archivo = "parcial.wlk")
 	const agregarTexto1 = new CambioAgregar(archivo="parcial.wlk",texto="Este es un parcial")
 	const agregarTexto2 = new CambioAgregar(archivo="parcial.wlk",texto=" y lo voy a desaprobar")
-	const inicial = new Commit(descripcion="Commit inicial", cambios=[agregarReadme,agregarParcial,agregarTexto1])
-	const agregadoTexto = new Commit(descripcion = "Agregado texto en parcial.wlk",cambios=[agregarTexto2])
+	const inicial = new Commit(autor = null,descripcion="Commit inicial", cambios=[agregarReadme,agregarParcial,agregarTexto1])
+	const agregadoTexto = new Commit(autor = null,descripcion = "Agregado texto en parcial.wlk",cambios=[agregarTexto2])
 	const eliminarLeeme = new EliminarArchivo(archivo = "leeme.md")
-	const eliminar = new Commit(descripcion="Eliminado leeme.md",cambios= [eliminarLeeme])
-	const branchPdep = new Branch(carpeta=pdep,commits=[inicial,agregadoTexto,eliminar])
+	const eliminar = new Commit(autor = null,descripcion="Eliminado leeme.md",cambios= [eliminarLeeme])
+	const branchPdep = new Branch(colaboradores = [],commits=[inicial,agregadoTexto,eliminar])
 	const logParcial = new Log(archivo="parcial.wlk")
 	
 	test "aplicar checkOut sobre carpeta pdep"{
-		branchPdep.hacerCheckout()
+		branchPdep.hacerCheckout(pdep)
 		assert.that(pdep.contieneA("parcial.wlk"))
 		assert.notThat(pdep.contieneA("leeme.md"))
 		assert.equals("Este es un parcial y lo voy a desaprobar",pdep.obtenerArchivo("parcial.wlk").contenido())

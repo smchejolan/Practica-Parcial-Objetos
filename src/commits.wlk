@@ -1,14 +1,15 @@
 import carpetas.*
 
 class Commit{
-	var descripcion 
+	const property autor
+	var property descripcion 
 	const property cambios  = []
 	
 	method aplicarCommit(carpeta){
 		cambios.forEach({cambio=>cambio.aplicarCambio(carpeta)})
 		//carpeta.branch().agregarCommit(self)
 	}
-	method revert() = new Commit(descripcion = "Revert " + descripcion,cambios=self.crearCambiosRevert())  
+	method revert(autorRevert) = new Commit(autor=autorRevert,descripcion = "Revert " + descripcion,cambios=self.crearCambiosRevert())  
 	method crearCambiosRevert() = cambios.map({cambio=>cambio.obtenerInverso()}).reverse()
 }
 

@@ -22,6 +22,6 @@ class Archivo{
 	}
 	method borrarContenido(texto){
 		if(contenido.endsWith(texto)) 
-			contenido = contenido.takeLeft(texto.size()) 
+			contenido = contenido.takeLeft(contenido.size() - texto.size()) 
 	}
 }

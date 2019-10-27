@@ -1,0 +1,30 @@
+import carpetas.*
+import commits.*
+import branch.*
+import autores.* 
+
+describe "Autores superclasico" {
+	const mauri = new Usuario(clase=administrador)
+	const marcelo = new Usuario(clase= usuarioComun)
+	const guillermo = new Usuario(clase= usuarioComun)
+	const gustavo = new Usuario(clase= usuarioComun)
+	const finalCarpeta = new Carpeta(nombre = "final")	
+
+
+	test"final"{
+		var final = marcelo.crearBranch([guillermo,gustavo])
+		guillermo.hacerCommit(final,"2 goles para boca",[new CrearArchivo(archivo="Final"),new CambioAgregar(archivo="Final",texto="Boca 2")])
+		guillermo.hacerCommit(final,"0 goles para river",[new CambioAgregar(archivo="Final",texto=" River 0")])
+		marcelo.hacerCommit(final,"3 goles para River",[new CambioSacar(archivo="Final",texto = "0"),new CambioAgregar(archivo="Final",texto = "3")])
+		mauri.revertirUltimoCommit(final)
+		gustavo.hacerCommit(final,"recaudaciones",[new CrearArchivo(archivo="recaudacion")])
+		mauri.hacerAdministradores(final.blame("Final"))
+		marcelo.hacerUsuarioComun(mauri)
+		gustavo.hacerAdministradores([mauri])
+		final.hacerCheckout(finalCarpeta)		
+		assert.equals("Boca 2 River 0",finalCarpeta.obtenerArchivo("Final").contenido())	
+		assert.equals(administrador,marcelo.clase())
+		assert.equals(usuarioComun,mauri.clase())
+		assert.notEquals(administrador,gustavo.clase())
+	}
+}
